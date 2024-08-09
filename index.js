@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const { Sequelize, Model, DataTypes } = require("sequelize");
 
 const app = express();
-const port = 8081;
+const port = 8082;
 
 // Create Sequelize instance
 const sequelize = new Sequelize({
@@ -19,6 +19,7 @@ User.init(
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     token: DataTypes.STRING,
+    phone: DataTypes.STRING,
   },
   { sequelize, modelName: "user" }
 );
@@ -36,8 +37,8 @@ app.get("/users", async (req, res) => {
   res.json(users);
 });
 
-app.get("/users/:id", async (req, res) => {
-  const user = await User.findByPk(req.params.id);
+app.get("/users/:phone", async (req, res) => {
+  const user = await User.findOne({ where: { phone: req.params.phone } });
   res.json(user);
 });
 
@@ -46,8 +47,8 @@ app.post("/users", async (req, res) => {
   res.json(user);
 });
 
-app.put("/users/:id", async (req, res) => {
-  const user = await User.findByPk(req.params.id);
+app.put("/users/:phone", async (req, res) => {
+  const user = await User.findOne({ where: { phone: req.params.phone } });
   if (user) {
     await user.update(req.body);
     res.json(user);
